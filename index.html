@@ -2,51 +2,70 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Candy Match</title>
+<title>Candy Match - Анимации</title>
 <style>
-    body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: #222;
-        font-family: sans-serif;
-        color: #fff;
-        margin: 0;
-        padding: 20px;
-    }
-    #info {
-        display: flex;
-        justify-content: space-between;
-        width: 400px;
-        margin-bottom: 10px;
-    }
-    #game {
-        width: 400px;
-        height: 400px;
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        grid-template-rows: repeat(8, 1fr);
-        gap: 2px;
-        background: #111;
-        padding: 5px;
-        position: relative;
-    }
-    .cell {
-        width: 100%;
-        height: 100%;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.2s;
-        background-size: cover;
-        background-position: center;
-    }
-    .cell:hover {
-        transform: scale(1.1);
-    }
-    #message {
-        margin-top: 20px;
-        font-size: 1.2em;
-    }
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #2b2b2b;
+    font-family: sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+}
+
+#info {
+    display: flex;
+    justify-content: space-between;
+    width: 420px;
+    margin-bottom: 10px;
+}
+
+#game {
+    width: 420px;
+    height: 420px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    gap: 5px;
+    background: #111;
+    padding: 5px;
+    position: relative;
+}
+
+.cell {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    user-select: none;
+}
+
+.cell.swap {
+    z-index: 2;
+    transition: transform 0.3s ease-in-out;
+}
+
+.cell.match {
+    animation: explode 0.3s forwards;
+}
+
+@keyframes explode {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 0.7; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 1.2em;
+}
 </style>
 </head>
 <body>
@@ -63,7 +82,7 @@
 <script>
 const size = 8;
 const candies = [
-    '🍬', '🍭', '🍫', '🍡', '🍪' // эмодзи вместо спрайтов для простоты
+    '🍬', '🍭', '🍫', '🍡', '🍪'
 ];
 let grid = [];
 let firstCell = null;
@@ -71,6 +90,7 @@ let score = 0;
 let moves = 30;
 let timer = 60;
 let timerInterval;
+let animating = false;
 
 // Инициализация
 function init() {
@@ -97,29 +117,32 @@ function fillGrid() {
 function render() {
     document.querySelectorAll(".cell").forEach((cell, i) => {
         cell.textContent = grid[i];
+        cell.classList.remove('match', 'swap');
         cell.onclick = () => clickCell(i);
-        cell.ontouchstart = () => clickCell(i); // мобильная поддержка
+        cell.ontouchstart = () => clickCell(i);
     });
 }
 
 // Клик по клетке
 function clickCell(i) {
-    if (moves <= 0) return;
+    if (moves <= 0 || animating) return;
     if (firstCell === null) {
         firstCell = i;
         return;
     }
     if (isNeighbor(firstCell, i)) {
-        swapCells(firstCell, i);
-        if (findMatches().length > 0) {
-            moves--;
-            processMatches();
-        } else {
-            swapCells(firstCell, i); // отмена если нет совпадений
-        }
-        render();
-        updateInfo();
-        checkGameOver();
+        animating = true;
+        animateSwap(firstCell, i).then(() => {
+            if (findMatches().length > 0) {
+                moves--;
+                processMatches();
+            } else {
+                // отменяем, если нет совпадений
+                animateSwap(firstCell, i).then(() => { animating = false; });
+            }
+            updateInfo();
+            checkGameOver();
+        });
     }
     firstCell = null;
 }
@@ -129,6 +152,32 @@ function isNeighbor(a, b) {
     const ax = a % size, ay = Math.floor(a / size);
     const bx = b % size, by = Math.floor(b / size);
     return (Math.abs(ax - bx) + Math.abs(ay - by)) === 1;
+}
+
+// Анимация смены мест
+function animateSwap(a, b) {
+    return new Promise(resolve => {
+        const cells = document.querySelectorAll('.cell');
+        const cellA = cells[a];
+        const cellB = cells[b];
+
+        const dx = (cellB.offsetLeft - cellA.offsetLeft);
+        const dy = (cellB.offsetTop - cellA.offsetTop);
+
+        cellA.classList.add('swap');
+        cellB.classList.add('swap');
+
+        cellA.style.transform = `translate(${dx}px, ${dy}px)`;
+        cellB.style.transform = `translate(${-dx}px, ${-dy}px)`;
+
+        setTimeout(() => {
+            cellA.style.transform = '';
+            cellB.style.transform = '';
+            swapCells(a, b);
+            render();
+            resolve();
+        }, 300);
+    });
 }
 
 // Меняем местами
@@ -166,10 +215,19 @@ function findMatches() {
 // Обработка совпадений
 function processMatches() {
     let matches = findMatches();
-    while (matches.length > 0) {
-        score += matches.length * 10;
-        matches.forEach(i => grid[i] = null);
+    if (matches.length === 0) {
+        animating = false;
+        return;
+    }
 
+    matches.forEach(i => {
+        grid[i] = null;
+        document.querySelectorAll('.cell')[i].classList.add('match');
+    });
+
+    score += matches.length * 10;
+
+    setTimeout(() => {
         // смещаем вниз
         for (let x = 0; x < size; x++) {
             let col = [];
@@ -180,11 +238,9 @@ function processMatches() {
             while (col.length < size) col.unshift(candies[Math.floor(Math.random() * candies.length)]);
             for (let y = 0; y < size; y++) grid[y * size + x] = col[y];
         }
-
-        matches = findMatches();
-    }
-    render();
-    updateInfo();
+        render();
+        setTimeout(processMatches, 300);
+    }, 300);
 }
 
 // Обновление информации
@@ -206,15 +262,11 @@ function startTimer() {
     }, 1000);
 }
 
-// Проверка конца игры
-function checkGameOver() {
-    if (moves <= 0) endGame();
-}
-
 // Конец игры
 function endGame() {
     document.getElementById("message").textContent = "Игра окончена! Ваш счёт: " + score;
     moves = 0;
+    animating = true;
 }
 
 init();
