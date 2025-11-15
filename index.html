@@ -30,7 +30,6 @@
         border: 2px solid #ff0044;
     }
 
-    /* Подсвеченное кольцо */
     .wheel-wrapper {
         position: relative;
         width: 320px;
@@ -61,7 +60,6 @@
         box-shadow: 0 0 25px #ffffff55 inset, 0 0 20px #000;
     }
 
-    /* Неоновая стрелка */
     .pointer {
         width: 0;
         height: 0;
@@ -72,7 +70,6 @@
         filter: drop-shadow(0 0 8px #ff0044);
     }
 
-    /* Кнопка */
     button {
         padding: 14px 30px;
         font-size: 20px;
@@ -84,6 +81,7 @@
         cursor: pointer;
         box-shadow: 0 0 20px #ff0044, inset 0 0 10px #ffffff44;
         transition: .2s;
+        margin-top: 15px;
     }
     button:hover {
         transform: scale(1.09);
@@ -99,12 +97,24 @@
         margin-top: 10px;
     }
 
+    #betInput {
+        width: 120px;
+        padding: 8px;
+        font-size: 18px;
+        border-radius: 10px;
+        border: 2px solid #ff0044;
+        background: #111;
+        color: #fff;
+        text-align: center;
+        outline: none;
+        box-shadow: 0 0 10px #ff004455;
+    }
+
     #result {
         margin-top: 20px;
         font-size: 22px;
         text-shadow: 0 0 10px #ffee00;
     }
-
 </style>
 </head>
 <body>
@@ -115,12 +125,15 @@
 
     <div id="balance">Баланс: 1000💰</div>
 
+    <p>Введите ставку:</p>
+    <input id="betInput" type="number" value="100" min="1">
+
     <div class="pointer"></div>
     <div class="wheel-wrapper">
         <div id="wheel" class="wheel"></div>
     </div>
 
-    <button id="spinBtn">🎰 Крутить (ставка 100)</button>
+    <button id="spinBtn">🎰 Крутить</button>
 
     <p id="result"></p>
 
@@ -131,6 +144,7 @@
     const btn = document.getElementById("spinBtn");
     const result = document.getElementById("result");
     const balanceText = document.getElementById("balance");
+    const betInput = document.getElementById("betInput");
 
     let balance = 1000;
     let isSpinning = false;
@@ -149,7 +163,13 @@
     btn.addEventListener("click", () => {
         if (isSpinning) return;
 
-        const bet = 100;
+        let bet = parseInt(betInput.value);
+
+        if (isNaN(bet) || bet <= 0) {
+            result.textContent = "⚠ Введи корректную ставку!";
+            return;
+        }
+
         if (balance < bet) {
             result.textContent = "❗ Недостаточно средств!";
             return;
