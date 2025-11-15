@@ -2,37 +2,33 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Сайт знакомств</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Simple Casino JS</title>
 </head>
 <body>
 
-<div class="container">
+<h2>Регистрация</h2>
+<input id="regName" placeholder="Имя">
+<input id="regEmail" placeholder="Email">
+<input id="regPass" type="password" placeholder="Пароль">
+<button onclick="register()">Регистрация</button>
 
-    <h1>Сайт знакомств</h1>
+<h2>Вход</h2>
+<input id="logEmail" placeholder="Email">
+<input id="logPass" type="password" placeholder="Пароль">
+<button onclick="login()">Вход</button>
 
-    <div id="auth">
-        <h2>Регистрация</h2>
-        <input id="regName" placeholder="Ваше имя">
-        <input id="regAge" type="number" placeholder="Возраст">
-        <input id="regEmail" placeholder="Email">
-        <input id="regPass" type="password" placeholder="Пароль">
-        <button onclick="register()">Зарегистрироваться</button>
+<hr>
 
-        <h2>Вход</h2>
-        <input id="logEmail" placeholder="Email">
-        <input id="logPass" type="password" placeholder="Пароль">
-        <button onclick="login()">Войти</button>
-    </div>
+<div id="game" style="display:none;">
+    <h2>Добро пожаловать, <span id="username"></span></h2>
+    Баланс: <span id="balance"></span>💰
 
-    <div id="profile" style="display:none;">
-        <h2>Добро пожаловать, <span id="userName"></span>!</h2>
-        <button onclick="logout()">Выйти</button>
+    <h3>Игра: Угадай число 0–4</h3>
+    <input id="bet" type="number" placeholder="Ставка">
+    <input id="guess" type="number" placeholder="Ваше число (0–4)">
+    <button onclick="play()">Играть</button>
 
-        <h3>Другие пользователи</h3>
-        <div id="usersList"></div>
-    </div>
-
+    <p id="result"></p>
 </div>
 
 <script src="script.js"></script>
