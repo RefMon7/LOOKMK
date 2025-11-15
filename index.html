@@ -2,85 +2,79 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Mini Tycoon 3D</title>
+<title>Mini Tycoon 3D Mobile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
 <style>
     body {
         margin: 0;
-        overflow: hidden;
         font-family: 'Segoe UI', sans-serif;
         background: #1c1c2b;
         color: #fff;
+        overflow: hidden;
+        touch-action: none; /* блокирует скролл при управлении */
     }
 
     /* HUD */
     #hud {
         position: fixed;
-        top: 15px;
-        left: 15px;
-        font-size: 22px;
+        top: 10px;
+        left: 10px;
+        font-size: 20px;
         background: rgba(0,0,0,0.45);
-        padding: 12px 18px;
+        padding: 10px 15px;
         border-radius: 10px;
-        backdrop-filter: blur(5px);
+        z-index: 20;
     }
 
     #shop-btn {
         position: fixed;
-        right: 20px;
-        top: 15px;
+        right: 10px;
+        top: 10px;
         background: #4a7efc;
-        padding: 12px 20px;
+        padding: 10px 15px;
         border-radius: 10px;
-        font-size: 20px;
+        font-size: 18px;
         cursor: pointer;
-        box-shadow: 0 0 12px rgba(74,126,252,0.6);
-    }
-    #shop-btn:hover {
-        background: #6b94ff;
+        z-index: 20;
     }
 
-    /* Магазин */
     #shop {
         position: fixed;
-        right: 20px;
-        top: 70px;
+        right: 10px;
+        top: 60px;
+        width: 240px;
         background: rgba(0,0,0,0.6);
-        padding: 15px;
-        width: 280px;
+        padding: 12px;
         border-radius: 10px;
         display: none;
-        backdrop-filter: blur(6px);
+        z-index: 20;
     }
     .shop-item {
-        background: rgba(255,255,255,0.08);
         padding: 10px;
-        margin: 10px 0;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .shop-item:hover {
-        background: rgba(255,255,255,0.2);
+        background: rgba(255,255,255,0.1);
+        margin: 6px 0;
+        border-radius: 10px;
     }
 
     /* Сцена */
     #scene {
         width: 100vw;
         height: 100vh;
-        perspective: 900px;
-        overflow: hidden;
+        perspective: 1200px;
     }
 
     #world {
         width: 1600px;
         height: 1600px;
-        margin: auto;
-        transform-style: preserve-3d;
         position: relative;
+        transform-style: preserve-3d;
         top: 50%;
-        transform: translateY(-50%) rotateX(55deg) rotateZ(45deg);
+        left: 50%;
+        transform: translate(-50%, -50%) rotateX(55deg) rotateZ(45deg) scale(0.7);
     }
 
+    /* Клетки */
     .tile {
         position: absolute;
         width: 200px;
@@ -88,14 +82,10 @@
         background: #2d2d3f;
         border: 2px solid #444;
         border-radius: 6px;
-        transition: 0.2s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
     .tile.built {
         background: #4caf50;
-        box-shadow: 0 0 20px rgba(76,175,80,0.8);
+        box-shadow: 0 0 12px rgba(76,175,80,0.8);
     }
 
     /* Игрок */
@@ -105,50 +95,75 @@
         position: absolute;
         background: #ffeb3b;
         border-radius: 50%;
-        transform-style: preserve-3d;
-        box-shadow: 0 0 20px rgba(255,235,59,0.8);
+        box-shadow: 0 0 18px rgba(255,235,59,0.8);
+    }
+
+    /* Мобильный джойстик */
+    #joystickArea {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        z-index: 30;
+        touch-action: none;
+    }
+
+    #stick {
+        width: 70px;
+        height: 70px;
+        background: rgba(255,255,255,0.4);
+        border-radius: 50%;
+        position: absolute;
+        left: 45px;
+        top: 45px;
     }
 </style>
 </head>
 <body>
 
 <div id="hud">💰 <span id="money">0</span></div>
-<div id="shop-btn">🛒 Магазин</div>
-
+<div id="shop-btn">🛒</div>
 <div id="shop"></div>
 
 <div id="scene">
     <div id="world"></div>
 </div>
 
+<!-- Джойстик -->
+<div id="joystickArea">
+    <div id="stick"></div>
+</div>
+
 <script>
-/* ----------------- ДАННЫЕ ------------------ */
+/* ------------------- ДАННЫЕ ------------------- */
 
 let money = 0;
 let income = 0;
 
 const SIZE = 5;
 const TILE_SIZE = 200;
-
-const buildings = [
-    {name: "Палатка", cost: 50, income: 5},
-    {name: "Ларёк", cost: 120, income: 15},
-    {name: "Магазин", cost: 300, income: 35},
-    {name: "Фабрика", cost: 700, income: 80}
-];
-
 let tiles = [];
 
-/* ----------------- СОХРАНЕНИЯ ------------------ */
+const buildings = [
+    {name: "Палатка", cost: 40, income: 5},
+    {name: "Ларёк", cost: 120, income: 15},
+    {name: "Магазин", cost: 330, income: 40},
+    {name: "Фабрика", cost: 750, income: 85}
+];
+
+/* ------------------- СОХРАНЕНИЕ ------------------- */
 
 function save() {
-    localStorage.setItem("tycoon3d", JSON.stringify({
+    localStorage.setItem("tycoon_mobile", JSON.stringify({
         money, income, tiles
     }));
 }
 
 function load() {
-    let data = localStorage.getItem("tycoon3d");
+    let data = localStorage.getItem("tycoon_mobile");
     if (data) {
         data = JSON.parse(data);
         money = data.money;
@@ -157,20 +172,13 @@ function load() {
     }
 }
 
-
-/* ----------------- МИР ------------------ */
+/* ------------------- МИР ------------------- */
 
 const world = document.getElementById("world");
 
 function createWorld() {
-
     if (tiles.length === 0) {
-        // создаём пустые клетки впервые
-        for (let y = 0; y < SIZE; y++) {
-            for (let x = 0; x < SIZE; x++) {
-                tiles.push({level: -1});
-            }
-        }
+        for (let i = 0; i < SIZE * SIZE; i++) tiles.push({level: -1});
     }
 
     world.innerHTML = "";
@@ -178,49 +186,45 @@ function createWorld() {
     tiles.forEach((tile, i) => {
         const el = document.createElement("div");
         el.className = "tile";
-
         if (tile.level >= 0) el.classList.add("built");
 
         el.style.left = (i % SIZE) * TILE_SIZE + "px";
         el.style.top = Math.floor(i / SIZE) * TILE_SIZE + "px";
 
-        el.onclick = () => tryBuild(i);
+        el.onclick = () => build(i);
 
-        world.appendChild(el);
         tile.el = el;
+        world.appendChild(el);
     });
 }
 
+/* ------------------- СТРОИТЕЛЬСТВО ------------------- */
 
-/* ----------------- СТРОИТЕЛЬСТВО ------------------ */
+function build(i) {
+    let t = tiles[i];
+    let next = t.level + 1;
 
-function tryBuild(i) {
-    const tile = tiles[i];
-    const nextLevel = tile.level + 1;
+    if (next > buildings.length - 1) return;
 
-    if (nextLevel >= buildings.length) return;
+    let b = buildings[next];
+    if (money < b.cost) return alert("Не хватает денег!");
 
-    const b = buildings[nextLevel];
-    if (money < b.cost) return alert("Недостаточно денег!");
-
-    tile.level++;
+    t.level++;
     money -= b.cost;
     income += b.income;
-    tile.el.classList.add("built");
+    t.el.classList.add("built");
 
     updateHUD();
     save();
 }
 
-
-/* ----------------- ИГРОК ------------------ */
+/* ------------------- ИГРОК ------------------- */
 
 const player = document.createElement("div");
 player.id = "player";
 world.appendChild(player);
 
-let px = 200;
-let py = 200;
+let px = 200, py = 200;
 
 function movePlayer() {
     player.style.left = px + "px";
@@ -229,27 +233,52 @@ function movePlayer() {
 
 movePlayer();
 
-let keys = {};
+/* ------------------- МОБИЛЬНЫЙ ДЖОЙСТИК ------------------- */
 
-document.onkeydown = e => keys[e.key] = true;
-document.onkeyup = e => keys[e.key] = false;
+const joy = document.getElementById("joystickArea");
+const stick = document.getElementById("stick");
 
-function playerLoop() {
-    if (keys["w"]) py -= 5;
-    if (keys["s"]) py += 5;
-    if (keys["a"]) px -= 5;
-    if (keys["d"]) px += 5;
+let joyX = 0, joyY = 0;
 
-    px = Math.max(0, Math.min(px, (SIZE * TILE_SIZE) - 40));
-    py = Math.max(0, Math.min(py, (SIZE * TILE_SIZE) - 40));
+joy.addEventListener("touchmove", (e) => {
+    let rect = joy.getBoundingClientRect();
+    let x = e.touches[0].clientX - rect.left - rect.width / 2;
+    let y = e.touches[0].clientY - rect.top - rect.height / 2;
+
+    const max = 50;
+    let dist = Math.sqrt(x*x + y*y);
+
+    if (dist > max) {
+        x = x / dist * max;
+        y = y / dist * max;
+    }
+
+    stick.style.transform = `translate(${x}px, ${y}px)`;
+
+    joyX = x / max;
+    joyY = y / max;
+});
+
+joy.addEventListener("touchend", () => {
+    stick.style.transform = `translate(0px,0px)`;
+    joyX = joyY = 0;
+});
+
+/* ------------------- ДВИЖЕНИЕ ------------------- */
+
+function loop() {
+    px += joyX * 6;
+    py += joyY * 6;
+
+    px = Math.max(0, Math.min(px, SIZE * TILE_SIZE - 40));
+    py = Math.max(0, Math.min(py, SIZE * TILE_SIZE - 40));
 
     movePlayer();
-    requestAnimationFrame(playerLoop);
+    requestAnimationFrame(loop);
 }
-playerLoop();
+loop();
 
-
-/* ----------------- ДОХОД ------------------ */
+/* ------------------- ДОХОД ------------------- */
 
 function updateHUD() {
     document.getElementById("money").innerText = money;
@@ -261,11 +290,9 @@ setInterval(() => {
     save();
 }, 3000);
 
-
-/* ----------------- МАГАЗИН ------------------ */
+/* ------------------- МАГАЗИН ------------------- */
 
 const shop = document.getElementById("shop");
-
 document.getElementById("shop-btn").onclick = () => {
     shop.style.display = shop.style.display === "block" ? "none" : "block";
 };
@@ -273,22 +300,19 @@ document.getElementById("shop-btn").onclick = () => {
 function renderShop() {
     shop.innerHTML = "";
     buildings.forEach(b => {
-        const item = document.createElement("div");
-        item.className = "shop-item";
-        item.innerHTML = `<b>${b.name}</b><br>Цена: ${b.cost}<br>Доход: +${b.income}`;
-        shop.appendChild(item);
+        let d = document.createElement("div");
+        d.className = "shop-item";
+        d.innerHTML = `<b>${b.name}</b><br>Цена: ${b.cost}<br>Доход: +${b.income}`;
+        shop.appendChild(d);
     });
 }
 
-
-/* ----------------- ЗАПУСК ------------------ */
-
+/* ------------------- ЗАПУСК ------------------- */
 load();
 createWorld();
-updateHUD();
 renderShop();
+updateHUD();
 
 </script>
-
 </body>
 </html>
