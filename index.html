@@ -2,264 +2,192 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Candy Match Mobile</title>
+<title>Neon Casino — Рулетка</title>
 <style>
-html, body {
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    background: #2b2b2b;
-    color: #fff;
-    height: 100%;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Trebuchet MS', sans-serif;
+        background: radial-gradient(circle at center, #111 0%, #000 100%);
+        color: #fff;
+        text-align: center;
+        overflow-x: hidden;
+    }
 
-#info {
-    display: flex;
-    justify-content: space-around;
-    width: 90%;
-    margin-bottom: 10px;
-    font-size: 1.2em;
-}
+    h2 {
+        font-size: 32px;
+        text-shadow: 0 0 10px #ff0044, 0 0 20px #ff0044;
+        margin-top: 20px;
+    }
 
-#game {
-    width: 90vw;
-    max-width: 500px;
-    aspect-ratio: 1;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(8, 1fr);
-    gap: 4px;
-    background: #111;
-    padding: 4px;
-    border-radius: 10px;
-    touch-action: none;
-}
+    .casino-box {
+        width: 380px;
+        margin: 20px auto;
+        padding: 20px;
+        background: rgba(20, 20, 20, 0.75);
+        border-radius: 20px;
+        box-shadow: 0 0 25px #ff004488, 0 0 60px #ff004422 inset;
+        border: 2px solid #ff0044;
+    }
 
-.cell {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    user-select: none;
-    transition: transform 0.3s;
-    cursor: pointer;
-    background: linear-gradient(145deg, #ffb3b3, #ff6666);
-}
+    /* Подсвеченное кольцо */
+    .wheel-wrapper {
+        position: relative;
+        width: 320px;
+        height: 320px;
+        margin: 30px auto;
+        border-radius: 50%;
+        box-shadow: 0 0 40px #ff004466, inset 0 0 20px #ffffff22, inset 0 0 60px #ff004422;
+        padding: 10px;
+        background: radial-gradient(circle, #222, #111);
+    }
 
-.cell.swap {
-    z-index: 2;
-    transition: transform 0.3s ease-in-out;
-}
+    .wheel {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        background: conic-gradient(
+            #ff4d4d 0deg 45deg,
+            #51ff51 45deg 90deg,
+            #4d4dff 90deg 135deg,
+            #ffcc00 135deg 180deg,
+            #ff4d4d 180deg 225deg,
+            #51ff51 225deg 270deg,
+            #4d4dff 270deg 315deg,
+            #ffcc00 315deg 360deg
+        );
+        transition: transform 4s cubic-bezier(.17,.67,.14,.93);
+        box-shadow: 0 0 25px #ffffff55 inset, 0 0 20px #000;
+    }
 
-.cell.match {
-    animation: explode 0.3s forwards;
-}
+    /* Неоновая стрелка */
+    .pointer {
+        width: 0;
+        height: 0;
+        border-left: 20px solid transparent;
+        border-right: 20px solid transparent;
+        border-bottom: 30px solid #ff0044;
+        margin: 0 auto;
+        filter: drop-shadow(0 0 8px #ff0044);
+    }
 
-@keyframes explode {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.5); opacity: 0.7; }
-    100% { transform: scale(0); opacity: 0; }
-}
+    /* Кнопка */
+    button {
+        padding: 14px 30px;
+        font-size: 20px;
+        font-weight: bold;
+        background: linear-gradient(45deg, #ff0044, #ff7700);
+        border: none;
+        border-radius: 50px;
+        color: #fff;
+        cursor: pointer;
+        box-shadow: 0 0 20px #ff0044, inset 0 0 10px #ffffff44;
+        transition: .2s;
+    }
+    button:hover {
+        transform: scale(1.09);
+        box-shadow: 0 0 25px #ff3300, inset 0 0 15px #ffffff66;
+    }
+    button:active {
+        transform: scale(0.97);
+    }
 
-#message {
-    margin-top: 15px;
-    font-size: 1.2em;
-    text-align: center;
-}
+    #balance {
+        font-size: 26px;
+        text-shadow: 0 0 10px #00ffcc;
+        margin-top: 10px;
+    }
+
+    #result {
+        margin-top: 20px;
+        font-size: 22px;
+        text-shadow: 0 0 10px #ffee00;
+    }
+
 </style>
 </head>
 <body>
 
-<div id="info">
-    <div>Счёт: <span id="score">0</span></div>
-    <div>Ходы: <span id="moves">30</span></div>
-    <div>Время: <span id="timer">60</span> с</div>
+<h2>✨ Neon Casino — Рулетка ✨</h2>
+
+<div class="casino-box">
+
+    <div id="balance">Баланс: 1000💰</div>
+
+    <div class="pointer"></div>
+    <div class="wheel-wrapper">
+        <div id="wheel" class="wheel"></div>
+    </div>
+
+    <button id="spinBtn">🎰 Крутить (ставка 100)</button>
+
+    <p id="result"></p>
+
 </div>
 
-<div id="game"></div>
-<div id="message"></div>
-
 <script>
-const size = 8;
-const candies = ['🍬','🍭','🍫','🍡','🍪'];
-let grid = [];
-let firstCell = null;
-let score = 0;
-let moves = 30;
-let timer = 60;
-let timerInterval;
-let animating = false;
+    const wheel = document.getElementById("wheel");
+    const btn = document.getElementById("spinBtn");
+    const result = document.getElementById("result");
+    const balanceText = document.getElementById("balance");
 
-let touchStart = null;
+    let balance = 1000;
+    let isSpinning = false;
 
-// Инициализация
-function init() {
-    const game = document.getElementById("game");
-    game.innerHTML = '';
-    for (let i = 0; i < size * size; i++) {
-        const div = document.createElement("div");
-        div.className = "cell";
-        div.dataset.index = i;
-        game.appendChild(div);
-    }
-    fillGrid();
-    render();
-    updateInfo();
-    startTimer();
-    setupTouch();
-}
+    const prizes = [
+        "100💰",
+        "Проигрыш",
+        "200💰",
+        "50💰",
+        "150💰",
+        "Проигрыш",
+        "300💰",
+        "500💰"
+    ];
 
-// Заполнение сетки
-function fillGrid() {
-    grid = Array(size * size).fill().map(() => candies[Math.floor(Math.random() * candies.length)]);
-}
+    btn.addEventListener("click", () => {
+        if (isSpinning) return;
 
-// Отрисовка
-function render() {
-    document.querySelectorAll(".cell").forEach((cell, i) => {
-        cell.textContent = grid[i];
-        cell.classList.remove('match', 'swap');
-    });
-}
-
-// Обновление информации
-function updateInfo() {
-    document.getElementById("score").textContent = score;
-    document.getElementById("moves").textContent = moves;
-    document.getElementById("timer").textContent = timer;
-}
-
-// Таймер
-function startTimer() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        timer--;
-        updateInfo();
-        if (timer <= 0) endGame();
-    }, 1000);
-}
-
-// Конец игры
-function endGame() {
-    document.getElementById("message").textContent = `Игра окончена! Ваш счёт: ${score}`;
-    moves = 0;
-    animating = true;
-}
-
-// Проверка соседства
-function isNeighbor(a, b) {
-    const ax = a % size, ay = Math.floor(a / size);
-    const bx = b % size, by = Math.floor(b / size);
-    return (Math.abs(ax - bx) + Math.abs(ay - by)) === 1;
-}
-
-// Меняем местами
-function swapCells(a, b) {
-    [grid[a], grid[b]] = [grid[b], grid[a]];
-}
-
-// Поиск совпадений
-function findMatches() {
-    let matches = [];
-    for (let y=0;y<size;y++){
-        for (let x=0;x<size-2;x++){
-            const i=y*size+x;
-            if (grid[i]===grid[i+1] && grid[i]===grid[i+2]) matches.push(i,i+1,i+2);
+        const bet = 100;
+        if (balance < bet) {
+            result.textContent = "❗ Недостаточно средств!";
+            return;
         }
-    }
-    for (let x=0;x<size;x++){
-        for (let y=0;y<size-2;y++){
-            const i=y*size+x;
-            if (grid[i]===grid[i+size] && grid[i]===grid[i+size*2]) matches.push(i,i+size,i+size*2);
-        }
-    }
-    return [...new Set(matches)];
-}
 
-// Обработка совпадений
-function processMatches() {
-    let matches = findMatches();
-    if (matches.length===0) { animating=false; return; }
-    matches.forEach(i=>{grid[i]=null;document.querySelectorAll('.cell')[i].classList.add('match');});
-    score+=matches.length*10;
-    setTimeout(()=>{
-        for (let x=0;x<size;x++){
-            let col=[];
-            for (let y=0;y<size;y++){
-                const i=y*size+x;
-                if(grid[i]!==null) col.push(grid[i]);
+        isSpinning = true;
+        result.textContent = "";
+        
+        balance -= bet;
+        updateBalance();
+
+        const sectorCount = prizes.length;
+        const sectorAngle = 360 / sectorCount;
+
+        const randomSector = Math.floor(Math.random() * sectorCount);
+        const rotateTo = 360 * 5 + randomSector * sectorAngle;
+
+        wheel.style.transform = `rotate(${rotateTo}deg)`;
+
+        setTimeout(() => {
+            const prize = prizes[randomSector];
+            isSpinning = false;
+
+            if (prize.includes("💰")) {
+                const amount = parseInt(prize);
+                balance += amount;
+                result.textContent = `🎉 Ваш приз: +${amount}💰`;
+            } else {
+                result.textContent = "💀 Проигрыш!";
             }
-            while(col.length<size) col.unshift(candies[Math.floor(Math.random()*candies.length)]);
-            for (let y=0;y<size;y++) grid[y*size+x]=col[y];
-        }
-        render();
-        setTimeout(processMatches,300);
-    },300);
-}
 
-// Обработка свайпов
-function setupTouch() {
-    const game = document.getElementById("game");
-    game.addEventListener('touchstart', e=>{touchStart=e.touches[0];});
-    game.addEventListener('touchend', e=>{
-        if (!touchStart || moves<=0 || animating) return;
-        const touchEnd = e.changedTouches[0];
-        const dx = touchEnd.clientX - touchStart.clientX;
-        const dy = touchEnd.clientY - touchStart.clientY;
-        if(Math.abs(dx)<10 && Math.abs(dy)<10) return;
-
-        const rect = game.getBoundingClientRect();
-        const cellSize = rect.width/size;
-        const startX = Math.floor((touchStart.clientX-rect.left)/cellSize);
-        const startY = Math.floor((touchStart.clientY-rect.top)/cellSize);
-        const endX = startX + (Math.abs(dx)>Math.abs(dy)?(dx>0?1:-1):0);
-        const endY = startY + (Math.abs(dy)>Math.abs(dx)?(dy>0?1:-1):0);
-
-        if(endX<0||endX>=size||endY<0||endY>=size) return;
-
-        const a = startY*size+startX;
-        const b = endY*size+endX;
-
-        if(isNeighbor(a,b)){
-            animating=true;
-            animateSwap(a,b).then(()=>{
-                if(findMatches().length>0){moves--;processMatches();}
-                else animateSwap(a,b).then(()=>{animating=false;});
-                updateInfo();
-                if(moves<=0) endGame();
-            });
-        }
-        touchStart=null;
+            updateBalance();
+        }, 4000);
     });
-}
 
-// Анимация смены мест
-function animateSwap(a,b){
-    return new Promise(resolve=>{
-        const cells=document.querySelectorAll('.cell');
-        const cellA=cells[a],cellB=cells[b];
-        const dx=cellB.offsetLeft-cellA.offsetLeft;
-        const dy=cellB.offsetTop-cellA.offsetTop;
-        cellA.classList.add('swap'); cellB.classList.add('swap');
-        cellA.style.transform=`translate(${dx}px,${dy}px)`; 
-        cellB.style.transform=`translate(${-dx}px,${-dy}px)`;
-        setTimeout(()=>{
-            cellA.style.transform=''; cellB.style.transform='';
-            swapCells(a,b); render(); resolve();
-        },300);
-    });
-}
-
-init();
+    function updateBalance() {
+        balanceText.textContent = `Баланс: ${balance}💰`;
+    }
 </script>
 
 </body>
