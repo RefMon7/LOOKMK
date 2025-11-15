@@ -1,362 +1,40 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>LOOKMK </title>
-<style>
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Inter, sans-serif;
-    background: #f5f5f7;
-    color: #1d1d1f;
-    -webkit-font-smoothing: antialiased;
-}
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-h2 { font-size: 42px; font-weight: 600; margin-bottom: 30px; letter-spacing: -1px; text-align: center; }
-h3 { font-size: 22px; font-weight: 600; margin-bottom: 20px; }
-.card {
-    background: rgba(255,255,255,0.75);
-    backdrop-filter: blur(22px);
-    padding: 28px;
-    border-radius: 26px;
-    margin-bottom: 25px;
-    border: 1px solid rgba(255,255,255,0.55);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
-    transition: 0.35s ease;
-}
-.card:hover { transform: translateY(-3px); box-shadow: 0 26px 50px rgba(0,0,0,0.09); }
-input, textarea, select {
-    width: 95%;
-    padding: 14px 16px;
-    margin-top: 12px;
-    border-radius: 14px;
-    border: 1px solid #d2d2d7;
-    background: #ffffff;
-    font-size: 16px;
-    transition: 0.25s;
-}
-input:focus, textarea:focus, select:focus {
-    border-color: #0071e3;
-    box-shadow: 0 0 0 3px rgba(0,113,227,0.25);
-    outline: none;
-}
-button {
-    width: 100%;
-    padding: 14px;
-    margin-top: 18px;
-    border: none;
-    border-radius: 14px;
-    background: #0071e3;
-    font-size: 17px;
-    color: white;
-    font-weight: 500;
-    cursor: pointer;
-    transition: 0.25s;
-}
-button:hover { background: #0a84ff; transform: translateY(-2px); }
-button:active { transform: scale(0.97); }
-.deleteBtn { background: #ff3b30; }
-.deleteBtn:hover { background: #ff453a; }
-.adminBtn { background: #5ac8fa; }
-.adminBtn:hover { background: #4bb8ec; }
-.chatMsg { border-bottom: 1px solid #ddd; padding: 6px 0; }
-.chatFrom { font-weight: bold; }
-.chatContainer { max-height:200px; overflow-y:auto; margin-top:10px; border:1px solid #ddd; padding:10px; border-radius:12px; background:#f9f9f9; }
-hr { border: none; border-top: 1px solid #dcdcdc; margin: 40px 0; }
-img { width: 100%; border-radius: 20px; margin-top: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-.adminLabel { background: #fff2cc; padding: 8px 16px; border-radius: 12px; font-size: 14px; }
-#sort { max-width: 260px; }
-
-@media (max-width: 768px) {
-    body { background: #fafafa; }
-    .container { max-width: 100%; margin: 0; padding: 15px; }
-    h2 { font-size: 28px; margin-top: 10px; }
-    h3 { font-size: 20px; margin-bottom: 16px; }
-    .card { padding: 20px; border-radius: 18px; margin-bottom: 18px; }
-    input, textarea, select { padding: 12px; font-size: 15px; border-radius: 12px; }
-    button { padding: 12px; font-size: 16px; border-radius: 12px; margin-top: 14px; }
-    img { border-radius: 14px; }
-    #sort { width: 100%; margin-bottom: 14px; }
-}
-@media (max-width: 380px) {
-    h2 { font-size: 22px; }
-    h3 { font-size: 18px; }
-    .card { padding: 16px; }
-    input, textarea, select { font-size: 14px; }
-    button { font-size: 15px; padding: 11px; }
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Сайт знакомств</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="container">
-<h2>LOOKMK </h2>
 
-<!-- Блок авторизации -->
-<div id="authBlock" class="card">
-    <h3>Вход</h3>
-    <input id="login" placeholder="Логин">
-    <input id="password" placeholder="Пароль" type="password">
-    <button onclick="loginUser()">Войти</button>
-    <p>Нет аккаунта? <a href="#" onclick="showRegister()">Создать</a></p>
-</div>
+    <h1>Сайт знакомств</h1>
 
-<!-- Блок регистрации -->
-<div id="registerBlock" class="card" style="display:none;">
-    <h3>Регистрация</h3>
-    <input id="regLogin" placeholder="Логин">
-    <input id="regPassword" placeholder="Пароль" type="password">
-    <button onclick="registerUser()">Создать</button>
-    <p><a href="#" onclick="showAuth()">Назад ко входу</a></p>
-</div>
+    <div id="auth">
+        <h2>Регистрация</h2>
+        <input id="regName" placeholder="Ваше имя">
+        <input id="regAge" type="number" placeholder="Возраст">
+        <input id="regEmail" placeholder="Email">
+        <input id="regPass" type="password" placeholder="Пароль">
+        <button onclick="register()">Зарегистрироваться</button>
 
-<!-- Блок добавления объявлений -->
-<div id="addBlock" class="card" style="display:none;">
-    <h3>Новое объявление</h3>
-    <input id="title" placeholder="Название">
-    <textarea id="text" placeholder="Описание"></textarea>
-    <select id="category">
-        <option value="Телефоны">Телефоны</option>
-        <option value="Компьютеры">Компьютеры</option>
-        <option value="Одежда">Одежда</option>
-        <option value="Авто">Авто</option>
-        <option value="Разное">Разное</option>
-    </select>
-    <input type="file" id="photo" accept="image/*">
-    <button onclick="addPost()">Отправить на модерацию</button>
-    <button onclick="logout()" style="background:#444;">Выйти</button>
-</div>
+        <h2>Вход</h2>
+        <input id="logEmail" placeholder="Email">
+        <input id="logPass" type="password" placeholder="Пароль">
+        <button onclick="login()">Войти</button>
+    </div>
 
-<!-- Мои объявления -->
-<div id="myPostsBlock" class="card" style="display:none;">
-    <h3>Мои объявления</h3>
-    <div id="myPosts"></div>
-</div>
+    <div id="profile" style="display:none;">
+        <h2>Добро пожаловать, <span id="userName"></span>!</h2>
+        <button onclick="logout()">Выйти</button>
 
-<!-- Админ панель -->
-<div id="adminPanel" class="card" style="display:none;">
-    <span class="adminLabel">Администратор</span>
-    <h3>Модерация объявлений</h3>
-    <div id="adminPosts"></div>
-</div>
-
-<hr>
-
-<h3>Все объявления</h3>
-<select id="sort" onchange="renderPosts()">
-    <option value="new">Сначала новые</option>
-    <option value="old">Сначала старые</option>
-    <option value="cat">По категориям</option>
-</select>
-
-<div id="posts"></div>
-
-<hr>
+        <h3>Другие пользователи</h3>
+        <div id="usersList"></div>
+    </div>
 
 </div>
 
-<script>
-// ======= ДАННЫЕ =======
-let posts = JSON.parse(localStorage.getItem("posts")||"[]");
-let users = JSON.parse(localStorage.getItem("users")||"[]");
-let messages = JSON.parse(localStorage.getItem("messages")||"[]");
-let currentUser = localStorage.getItem("currentUser");
-
-// Элементы
-const authBlock = document.getElementById("authBlock");
-const registerBlock = document.getElementById("registerBlock");
-const addBlock = document.getElementById("addBlock");
-const postsDiv = document.getElementById("posts");
-const myPosts = document.getElementById("myPosts");
-const myPostsBlock = document.getElementById("myPostsBlock");
-const adminPanel = document.getElementById("adminPanel");
-const adminPosts = document.getElementById("adminPosts");
-const sort = document.getElementById("sort");
-
-// ======= Инициализация админа =======
-if(!users.find(u=>u.login==="ADMIN")){
-    users.push({login:"ADMIN", pass:"1234", admin:true});
-    localStorage.setItem("users",JSON.stringify(users));
-}
-
-// ======= ФУНКЦИИ =======
-function save(){ 
-    localStorage.setItem("posts",JSON.stringify(posts));
-    localStorage.setItem("messages",JSON.stringify(messages));
-}
-
-function isAdmin(){ let u = users.find(x=>x.login===currentUser); return u && u.admin; }
-
-// Авторизация / Регистрация
-function showRegister(){ authBlock.style.display="none"; registerBlock.style.display="block"; }
-function showAuth(){ authBlock.style.display="block"; registerBlock.style.display="none"; }
-
-function loginUser(){
-    let l=document.getElementById("login").value.trim();
-    let p=document.getElementById("password").value.trim();
-    let u = users.find(x=>x.login===l && x.pass===p);
-    if(!u) return alert("Неверные данные!");
-    currentUser = l;
-    localStorage.setItem("currentUser",l);
-    authBlock.style.display="none";
-    addBlock.style.display="block";
-    myPostsBlock.style.display="block";
-    if(u.admin) adminPanel.style.display="block";
-    renderAdminPosts(); renderPosts(); renderMyPosts();
-}
-
-function registerUser(){
-    let l=document.getElementById("regLogin").value.trim();
-    let p=document.getElementById("regPassword").value.trim();
-    if(!l||!p) return alert("Заполните поля!");
-    if(users.find(u=>u.login===l)) return alert("Логин занят!");
-    users.push({login:l, pass:p, admin:false});
-    localStorage.setItem("users",JSON.stringify(users));
-    alert("Аккаунт создан!"); showAuth();
-}
-
-function logout(){
-    localStorage.removeItem("currentUser");
-    currentUser=null;
-    location.reload();
-}
-
-// Добавление объявления
-function addPost(){
-    let title=document.getElementById("title").value.trim();
-    let text=document.getElementById("text").value.trim();
-    let category=document.getElementById("category").value;
-    let file=document.getElementById("photo").files[0];
-    if(!title||!text) return alert("Заполните поля!");
-    let post={title,text,category,author:currentUser,confirmed:false,date:Date.now(),photo:null,id:Date.now()};
-    function finalize(){
-        posts.unshift(post); save();
-        renderPosts(); renderAdminPosts(); renderMyPosts();
-        alert("✅ Ваше объявление отправлено на модерацию!");
-    }
-    if(file){
-        let reader=new FileReader();
-        reader.onload=e=>{post.photo=e.target.result; finalize();}
-        reader.readAsDataURL(file);
-    } else finalize();
-    document.getElementById("title").value="";
-    document.getElementById("text").value="";
-    document.getElementById("photo").value="";
-}
-
-// Модерация
-function approvePost(i){ posts[i].confirmed=true; save(); renderPosts(); renderAdminPosts(); renderMyPosts(); }
-function delPost(i){ 
-    if(!isAdmin() && posts[i].author!==currentUser) return alert("Удалять может только автор или админ!"); 
-    posts.splice(i,1); save(); renderPosts(); renderAdminPosts(); renderMyPosts(); 
-}
-
-// Рендер
-function renderAdminPosts(){
-    if(!isAdmin()) return;
-    adminPosts.innerHTML="";
-    let pending=posts.filter(p=>!p.confirmed);
-    if(pending.length===0) adminPosts.innerHTML="<p>Нет объявлений на модерации</p>";
-    pending.forEach(p=>{
-        let i=posts.indexOf(p);
-        adminPosts.innerHTML+=`
-        <div class="card">
-            <b>${p.title}</b> (${p.category})<br>
-            Автор: ${p.author}<br><br>
-            ${p.text}<br>
-            ${p.photo?`<img src="${p.photo}">`:""}
-            <button class="adminBtn" onclick="approvePost(${i})">Одобрить</button>
-            <button class="deleteBtn" onclick="delPost(${i})">Удалить</button>
-        </div>`;
-    });
-}
-
-function renderPosts(){
-    postsDiv.innerHTML="";
-    let arr=posts.filter(p=>p.confirmed);
-    switch(sort.value){
-        case "new": arr.sort((a,b)=>b.date-a.date); break;
-        case "old": arr.sort((a,b)=>a.date-b.date); break;
-        case "cat": arr.sort((a,b)=>a.category.localeCompare(b.category)); break;
-    }
-    arr.forEach(p=>{
-        let i=posts.indexOf(p);
-        postsDiv.innerHTML+=`
-        <div class="card">
-            <b>${p.title}</b> (${p.category})<br>
-            <i>Автор: ${p.author}</i><br><br>
-            ${p.text}<br>
-            ${p.photo?`<img src="${p.photo}">`:""}
-            ${(isAdmin()||currentUser===p.author)?`<button class="deleteBtn" onclick="delPost(${i})">Удалить</button>`:""}
-            ${renderPostChat(p)}
-        </div>`;
-    });
-}
-
-function renderMyPosts(){
-    myPosts.innerHTML="";
-    let my=posts.filter(p=>p.author===currentUser);
-    if(my.length===0){ myPosts.innerHTML="<p>У вас пока нет объявлений</p>"; return; }
-    my.forEach(p=>{
-        let i=posts.indexOf(p);
-        myPosts.innerHTML+=`
-        <div class="card">
-            <b>${p.title}</b> (${p.category})<br>
-            ${p.confirmed?"<span style='color:green'>Одобрено</span>":"<span style='color:orange'>На модерации</span>"}<br><br>
-            ${p.text}<br>
-            ${p.photo?`<img src="${p.photo}">`:""}
-            <button class="deleteBtn" onclick="delPost(${i})">Удалить</button>
-            ${renderPostChat(p)}
-        </div>`;
-    });
-}
-
-// ======= Личный чат по объявлению =======
-function renderPostChat(post){
-    // показываем чат только автору объявления и тем кто написал сообщение к нему
-    let relevantMessages = messages.filter(m => m.postId === post.id && (m.from===currentUser || m.to===currentUser));
-    let chatHtml = `<div class="chatContainer" id="chat-${post.id}">`;
-    relevantMessages.forEach(m=>{
-        chatHtml += `<div class="chatMsg"><span class="chatFrom">${m.from}:</span> ${m.text}</div>`;
-    });
-    chatHtml += `</div>`;
-
-    // Если пользователь авторизован, показываем поле для ввода
-    if(currentUser){
-        chatHtml += `<input id="input-${post.id}" placeholder="Написать сообщение автору..." style="margin-top:8px;">
-                     <button onclick="sendPostMessage(${post.id},'${post.author}')">Отправить</button>`;
-    } else {
-        chatHtml += `<p style="color:gray; font-size:14px;">Только авторизованные пользователи могут писать сообщения</p>`;
-    }
-
-    return chatHtml;
-}
-
-
-function sendPostMessage(postId, author){
-    let input = document.getElementById(`input-${postId}`);
-    let text = input.value.trim();
-    if(!text) return alert("Введите сообщение!");
-    let toUser = (currentUser === author) ? prompt("Введите логин пользователя которому хотите написать") : author;
-    if(!toUser || !users.find(u=>u.login===toUser)) return alert("Пользователь не найден!");
-    messages.push({from:currentUser, to:toUser, text, postId});
-    save();
-    input.value="";
-    renderPosts();
-}
-
-// Инициализация
-if(currentUser){
-    authBlock.style.display="none";
-    addBlock.style.display="block";
-    myPostsBlock.style.display="block";
-    if(isAdmin()) adminPanel.style.display="block";
-}
-
-renderPosts(); renderAdminPosts(); renderMyPosts();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
