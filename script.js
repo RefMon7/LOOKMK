@@ -1,83 +1,59 @@
-// Получение списка пользователей
-function getUsers() {
-    return JSON.parse(localStorage.getItem('users') || '[]');
+let user = null;
+
+async function register() {
+    const res = await fetch("/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            username: regName.value,
+            email: regEmail.value,
+            password: regPass.value
+        })
+    });
+
+    const data = await res.json();
+    alert(data.ok ? "Успешно!" : data.msg);
 }
 
-// Сохранение пользователей
-function saveUsers(users) {
-    localStorage.setItem('users', JSON.stringify(users));
+async function login() {
+    const res = await fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            email: logEmail.value,
+            password: logPass.value
+        })
+    });
+
+    const data = await res.json();
+
+    if (!data.ok) return alert(data.msg);
+
+    user = data.user;
+
+    username.textContent = user.username;
+    balance.textContent = user.balance;
+
+    document.getElementById("game").style.display = "block";
 }
 
-// Регистрация
-function register() {
-    const name = document.getElementById("regName").value.trim();
-    const age = document.getElementById("regAge").value.trim();
-    const email = document.getElementById("regEmail").value.trim();
-    const pass = document.getElementById("regPass").value.trim();
+async function play() {
+    const res = await fetch("/bet", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            user_id: user.id,
+            bet: Number(bet.value),
+            guess: Number(guess.value)
+        })
+    });
 
-    if (!name || !age || !email || !pass) {
-        alert("Заполните все поля!");
-        return;
-    }
+    const data = await res.json();
+    if (!data.ok) return alert(data.msg);
 
-    const users = getUsers();
+    user.balance = data.balance;
+    balance.textContent = data.balance;
 
-    if (users.find(u => u.email === email)) {
-        alert("Такой email уже зарегистрирован!");
-        return;
-    }
-
-    users.push({ name, age, email, pass });
-    saveUsers(users);
-
-    alert("Регистрация успешна!");
-}
-
-// Вход
-function login() {
-    const email = document.getElementById("logEmail").value;
-    const pass = document.getElementById("logPass").value;
-
-    const users = getUsers();
-    const user = users.find(u => u.email === email && u.pass === pass);
-
-    if (!user) {
-        alert("Неверный email или пароль!");
-        return;
-    }
-
-    localStorage.setItem("currentUser", JSON.stringify(user));
-
-    showProfile();
-}
-
-// Показ профиля и других пользователей
-function showProfile() {
-    const user = JSON.parse(localStorage.getItem("currentUser"));
-    if (!user) return;
-
-    document.getElementById("auth").style.display = "none";
-    document.getElementById("profile").style.display = "block";
-    document.getElementById("userName").textContent = user.name;
-
-    const users = getUsers();
-    const list = document.getElementById("usersList");
-    list.innerHTML = "";
-
-    users
-        .filter(u => u.email !== user.email)
-        .forEach(u => {
-            list.innerHTML += `<div>${u.name}, ${u.age} лет</div>`;
-        });
-}
-
-// Выход
-function logout() {
-    localStorage.removeItem("currentUser");
-    location.reload();
-}
-
-// Если пользователь уже вошёл — показать профиль
-if (localStorage.getItem("currentUser")) {
-    showProfile();
+    result.textContent = `Выпало число ${data.number}. 
+                          ${data.win ? "Вы выиграли " + data.win : "Проигрыш"}!`;
 }
