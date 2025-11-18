@@ -1,202 +1,270 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Строительные услуги</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Строительные услуги</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-        }
+<!-- Иконки -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-        header {
-            background: #1e1e1e;
-            color: #fff;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+<style>
+/* -------- ОСНОВА -------- */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f6f6f6;
+    color: #222;
+}
 
-        header h1 { margin: 0; }
+header {
+    background: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-        nav a {
-            margin-left: 20px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+    color: #ff7f0e;
+}
 
-        .hero {
-            background: url('https://images.unsplash.com/photo-1503389152951-9f343605f61b') center/cover no-repeat;
-            height: 450px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            text-shadow: 0 0 10px black;
-            font-size: 36px;
-            font-weight: bold;
-        }
+nav a {
+    margin-left: 25px;
+    text-decoration: none;
+    color: #222;
+    font-weight: bold;
+    transition: 0.2s;
+}
 
-        section {
-            padding: 50px 40px;
-            background: white;
-            margin: 20px;
-            border-radius: 8px;
-        }
+nav a:hover { color: #ff7f0e; }
 
-        .services {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
+/* -------- ГЛАВНЫЙ БЛОК -------- */
+.hero {
+    background: url('https://images.unsplash.com/photo-1503387762-592deb58ef4e') center/cover;
+    height: 450px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:40px;
+    font-weight: bold;
+    text-shadow:0 0 20px rgba(0,0,0,0.7);
+}
 
-        .service-item {
-            background: #eee;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-        }
+/* -------- УСЛУГИ -------- */
+section {
+    background: white;
+    margin: 20px;
+    padding: 40px;
+    border-radius: 12px;
+}
 
-        .portfolio img {
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
+h2 { margin-top:0; }
 
-        footer {
-            background: #1e1e1e;
-            color: white;
-            padding: 20px 40px;
-            text-align: center;
-        }
+.services {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
 
-        /* Кнопка */
-        .btn {
-            background: #ff8200;
-            padding: 10px 20px;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
+.service {
+    background:#fafafa;
+    padding:25px;
+    border-radius:12px;
+    text-align:center;
+    border:1px solid #eee;
+    transition:.3s;
+}
+.service:hover {
+    transform:translateY(-5px);
+    box-shadow:0 4px 20px rgba(0,0,0,0.1);
+}
 
-        /* Модальное окно */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-        }
+.service i {
+    font-size:40px;
+    color:#ff7f0e;
+    margin-bottom:15px;
+}
 
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            text-align: center;
-        }
+/* -------- ПОРТФОЛИО -------- */
+.gallery {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    gap:20px;
+}
 
-        .close {
-            cursor: pointer;
-            float: right;
-            font-size: 20px;
-        }
-    </style>
+.gallery img {
+    width:100%;
+    border-radius:10px;
+}
+
+/* -------- КАЛЬКУЛЯТОР -------- */
+.calc-box {
+    background:#fafafa;
+    padding:25px;
+    border-radius:12px;
+    max-width:400px;
+}
+
+.calc-box input,
+.calc-box select {
+    width:100%;
+    padding:10px;
+    margin-bottom:15px;
+}
+
+.result {
+    font-size:22px;
+    font-weight:bold;
+    margin-top:15px;
+}
+
+/* -------- КОНТАКТЫ -------- */
+.contact {
+    line-height:1.8;
+}
+
+/* -------- ФУТЕР -------- */
+footer {
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:30px;
+    margin-top:30px;
+}
+
+/* -------- АДАПТИВ ------- */
+@media (max-width:600px) {
+    .hero { font-size:26px; }
+    header { padding: 10px 20px; }
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    <h1>Строительная компания</h1>
+    <div class="logo">BUILD.PRO</div>
     <nav>
         <a href="#services">Услуги</a>
-        <a href="#portfolio">Портфолио</a>
+        <a href="#portfolio">Работы</a>
+        <a href="#calc">Калькулятор</a>
         <a href="#contacts">Контакты</a>
     </nav>
 </header>
 
-<div class="hero">
-    Надежное строительство и ремонт
-</div>
+<div class="hero">Строительство и ремонт под ключ</div>
 
+<!-- Услуги -->
 <section id="services">
-    <h2>Наши услуги</h2>
+<h2>Наши услуги</h2>
 
-    <div class="services">
-        <div class="service-item">Ремонт квартир</div>
-        <div class="service-item">Строительство домов</div>
-        <div class="service-item">Отделочные работы</div>
-        <div class="service-item">Электромонтаж</div>
-        <div class="service-item">Сантехнические работы</div>
-        <div class="service-item">Фасадные работы</div>
+<div class="services">
+
+    <div class="service">
+        <i class="fa-solid fa-paint-roller"></i>
+        <h3>Ремонт квартир</h3>
+        <p>Косметический, капитальный, дизайнерский ремонт любой сложности.</p>
     </div>
 
-    <a class="btn" onclick="openModal()">Заказать консультацию</a>
+    <div class="service">
+        <i class="fa-solid fa-house"></i>
+        <h3>Строительство домов</h3>
+        <p>Проектирование и строительство частных домов под ключ.</p>
+    </div>
+
+    <div class="service">
+        <i class="fa-solid fa-hammer"></i>
+        <h3>Отделочные работы</h3>
+        <p>Штукатурка, покраска, плитка, гипсокартон, стяжка полов.</p>
+    </div>
+
+    <div class="service">
+        <i class="fa-solid fa-plug-circle-bolt"></i>
+        <h3>Электрика</h3>
+        <p>Замена проводки, щитов, розеток. Полная электрификация помещений.</p>
+    </div>
+
+    <div class="service">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        <h3>Сантехника</h3>
+        <p>Установка труб, отопления, тёплых полов, канализации.</p>
+    </div>
+
+</div>
 </section>
 
+<!-- Портфолио -->
 <section id="portfolio">
-    <h2>Наши работы</h2>
+<h2>Наши работы</h2>
 
-    <div class="portfolio">
-        <img src="https://images.unsplash.com/photo-1581091012184-5c8af8c9a7df" alt="">
-        <img src="https://images.unsplash.com/photo-1597075090219-3bf67a85d9e0" alt="">
-    </div>
+<div class="gallery">
+    <img src="https://images.unsplash.com/photo-1598928506311-c55ded1ad3df" alt="">
+    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956" alt="">
+    <img src="https://images.unsplash.com/photo-1615870216519-2f9fa575fa5e" alt="">
+    <img src="https://images.unsplash.com/photo-1519710164239-da123dc03ef4" alt="">
+</div>
 </section>
 
+<!-- Калькулятор -->
+<section id="calc">
+<h2>Калькулятор стоимости ремонта</h2>
+
+<div class="calc-box">
+    <label>Площадь помещения (м²):</label>
+    <input type="number" id="area" placeholder="Например: 45">
+
+    <label>Тип ремонта:</label>
+    <select id="type">
+        <option value="20">Косметический</option>
+        <option value="35">Капитальный</option>
+        <option value="50">Дизайнерский</option>
+    </select>
+
+    <button onclick="calcPrice()" style="padding:10px 15px;background:#ff7f0e;border:none;color:white;border-radius:5px;">
+        Рассчитать
+    </button>
+
+    <div class="result" id="result"></div>
+</div>
+</section>
+
+<!-- Контакты -->
 <section id="contacts">
-    <h2>Контакты</h2>
-    <p>Телефон: +371 0000 0000</p>
-    <p>Email: info@company.lv</p>
-    <p>Адрес: Рига, Латвия</p>
+<h2>Контакты</h2>
+
+<div class="contact">
+    <p><i class="fa-solid fa-phone"></i> +371 0000 0000</p>
+    <p><i class="fa-solid fa-envelope"></i> info@buildpro.lv</p>
+    <p><i class="fa-solid fa-location-dot"></i> Рига, Латвия</p>
+</div>
 </section>
 
 <footer>
-    © 2025 Строительная компания. Все права защищены.
+    © 2025 BUILD.PRO — строительные услуги. Все права защищены.
 </footer>
 
-<!-- Модальное окно -->
-<div class="modal" id="contactModal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">×</span>
-        <h3>Оставить заявку</h3>
-        <p>Мы свяжемся с вами в ближайшее время.</p>
-        <input type="text" id="name" placeholder="Ваше имя" style="width:100%;padding:8px;margin-bottom:10px;">
-        <input type="tel" id="phone" placeholder="Телефон" style="width:100%;padding:8px;margin-bottom:10px;">
-        <button class="btn" onclick="sendRequest()">Отправить</button>
-    </div>
-</div>
-
 <script>
-    function openModal() {
-        document.getElementById('contactModal').style.display = 'flex';
+function calcPrice() {
+    const area = document.getElementById('area').value;
+    const type = document.getElementById('type').value;
+
+    if (!area) {
+        document.getElementById('result').innerText = "Введите площадь!";
+        return;
     }
 
-    function closeModal() {
-        document.getElementById('contactModal').style.display = 'none';
-    }
-
-    function sendRequest() {
-        const name = document.getElementById('name').value;
-        const phone = document.getElementById('phone').value;
-
-        if (!name || !phone) {
-            alert('Пожалуйста, заполните все поля.');
-            return;
-        }
-
-        alert(`Спасибо, ${name}! Мы свяжемся с вами по номеру: ${phone}`);
-        closeModal();
-    }
+    const total = area * type * 10;
+    document.getElementById('result').innerText =
+        "Примерная стоимость: " + total.toLocaleString() + " €";
+}
 </script>
 
 </body>
