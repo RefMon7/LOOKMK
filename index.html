@@ -1,161 +1,203 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<title>2D Tycoon</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-    body {
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        background: #222;
-        color: #fff;
-        overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Строительные услуги</title>
 
-    canvas {
-        display: block;
-        background: #333;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+        }
 
-    /* HUD */
-    #hud {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        font-size: 20px;
-        background: rgba(0,0,0,0.5);
-        padding: 10px 15px;
-        border-radius: 10px;
-        z-index: 10;
-    }
+        header {
+            background: #1e1e1e;
+            color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    /* Магазин */
-    #shop {
-        position: fixed;
-        right: 10px;
-        top: 10px;
-        width: 220px;
-        background: rgba(0,0,0,0.6);
-        padding: 10px;
-        border-radius: 10px;
-        z-index: 10;
-    }
-    .shop-item {
-        margin: 8px 0;
-        padding: 8px;
-        background: rgba(255,255,255,0.1);
-        border-radius: 8px;
-        cursor: pointer;
-    }
-    .shop-item:hover {
-        background: rgba(255,255,255,0.2);
-    }
-</style>
+        header h1 { margin: 0; }
+
+        nav a {
+            margin-left: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .hero {
+            background: url('https://images.unsplash.com/photo-1503389152951-9f343605f61b') center/cover no-repeat;
+            height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-shadow: 0 0 10px black;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        section {
+            padding: 50px 40px;
+            background: white;
+            margin: 20px;
+            border-radius: 8px;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .service-item {
+            background: #eee;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .portfolio img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            background: #1e1e1e;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+        }
+
+        /* Кнопка */
+        .btn {
+            background: #ff8200;
+            padding: 10px 20px;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+
+        .close {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+        }
+    </style>
 </head>
+
 <body>
 
-<div id="hud">💰 Деньги: <span id="money">0</span></div>
-<div id="shop"></div>
-<canvas id="game"></canvas>
+<header>
+    <h1>Строительная компания</h1>
+    <nav>
+        <a href="#services">Услуги</a>
+        <a href="#portfolio">Портфолио</a>
+        <a href="#contacts">Контакты</a>
+    </nav>
+</header>
+
+<div class="hero">
+    Надежное строительство и ремонт
+</div>
+
+<section id="services">
+    <h2>Наши услуги</h2>
+
+    <div class="services">
+        <div class="service-item">Ремонт квартир</div>
+        <div class="service-item">Строительство домов</div>
+        <div class="service-item">Отделочные работы</div>
+        <div class="service-item">Электромонтаж</div>
+        <div class="service-item">Сантехнические работы</div>
+        <div class="service-item">Фасадные работы</div>
+    </div>
+
+    <a class="btn" onclick="openModal()">Заказать консультацию</a>
+</section>
+
+<section id="portfolio">
+    <h2>Наши работы</h2>
+
+    <div class="portfolio">
+        <img src="https://images.unsplash.com/photo-1581091012184-5c8af8c9a7df" alt="">
+        <img src="https://images.unsplash.com/photo-1597075090219-3bf67a85d9e0" alt="">
+    </div>
+</section>
+
+<section id="contacts">
+    <h2>Контакты</h2>
+    <p>Телефон: +371 0000 0000</p>
+    <p>Email: info@company.lv</p>
+    <p>Адрес: Рига, Латвия</p>
+</section>
+
+<footer>
+    © 2025 Строительная компания. Все права защищены.
+</footer>
+
+<!-- Модальное окно -->
+<div class="modal" id="contactModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">×</span>
+        <h3>Оставить заявку</h3>
+        <p>Мы свяжемся с вами в ближайшее время.</p>
+        <input type="text" id="name" placeholder="Ваше имя" style="width:100%;padding:8px;margin-bottom:10px;">
+        <input type="tel" id="phone" placeholder="Телефон" style="width:100%;padding:8px;margin-bottom:10px;">
+        <button class="btn" onclick="sendRequest()">Отправить</button>
+    </div>
+</div>
 
 <script>
-/* ------------------- ДАННЫЕ ------------------- */
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
-
-let money = 100;
-let income = 0;
-const GRID_SIZE = 6;       // 6x6 клеток
-const TILE_SIZE = 80;      // размер клетки в пикселях
-const tiles = [];          // массив клеток
-
-const buildings = [
-    {name: "Палатка", cost: 50, income: 5, color: "#4caf50"},
-    {name: "Ларёк", cost: 120, income: 15, color: "#2196f3"},
-    {name: "Магазин", cost: 300, income: 35, color: "#ff9800"},
-    {name: "Фабрика", cost: 700, income: 80, color: "#9c27b0"}
-];
-
-/* ------------------- ИНИЦИАЛИЗАЦИЯ ------------------- */
-canvas.width = GRID_SIZE * TILE_SIZE;
-canvas.height = GRID_SIZE * TILE_SIZE;
-
-for(let y=0; y<GRID_SIZE; y++){
-    for(let x=0; x<GRID_SIZE; x++){
-        tiles.push({x, y, level: -1});
+    function openModal() {
+        document.getElementById('contactModal').style.display = 'flex';
     }
-}
 
-/* ------------------- РИСОВАНИЕ ------------------- */
-function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    function closeModal() {
+        document.getElementById('contactModal').style.display = 'none';
+    }
 
-    // клетки
-    tiles.forEach(tile => {
-        ctx.fillStyle = tile.level >= 0 ? buildings[tile.level].color : "#555";
-        ctx.fillRect(tile.x*TILE_SIZE, tile.y*TILE_SIZE, TILE_SIZE-2, TILE_SIZE-2);
-        ctx.strokeStyle = "#222";
-        ctx.strokeRect(tile.x*TILE_SIZE, tile.y*TILE_SIZE, TILE_SIZE-2, TILE_SIZE-2);
-    });
-}
+    function sendRequest() {
+        const name = document.getElementById('name').value;
+        const phone = document.getElementById('phone').value;
 
-draw();
+        if (!name || !phone) {
+            alert('Пожалуйста, заполните все поля.');
+            return;
+        }
 
-/* ------------------- МАГАЗИН ------------------- */
-const shopDiv = document.getElementById("shop");
-
-function renderShop(){
-    shopDiv.innerHTML = "<h3>Магазин</h3>";
-    buildings.forEach((b,i)=>{
-        const item = document.createElement("div");
-        item.className = "shop-item";
-        item.innerHTML = `<b>${b.name}</b><br>Цена: ${b.cost}<br>Доход: +${b.income}`;
-        item.onclick = () => selectedBuilding = i;
-        shopDiv.appendChild(item);
-    });
-}
-
-let selectedBuilding = 0;
-renderShop();
-
-/* ------------------- ОБРАБОТКА КЛИКОВ ------------------- */
-canvas.addEventListener('click', function(e){
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-
-    const x = Math.floor(mx / TILE_SIZE);
-    const y = Math.floor(my / TILE_SIZE);
-
-    const tile = tiles.find(t=>t.x===x && t.y===y);
-    if(!tile) return;
-
-    const nextLevel = tile.level + 1;
-    if(nextLevel !== selectedBuilding) return; // строим только выбранное
-
-    const b = buildings[nextLevel];
-    if(money < b.cost) return alert("Недостаточно денег!");
-
-    tile.level++;
-    money -= b.cost;
-    income += b.income;
-
-    updateHUD();
-    draw();
-});
-
-/* ------------------- ДОХОД ------------------- */
-function updateHUD(){
-    document.getElementById("money").innerText = money;
-}
-
-setInterval(()=>{
-    money += income;
-    updateHUD();
-}, 3000);
-
-updateHUD();
+        alert(`Спасибо, ${name}! Мы свяжемся с вами по номеру: ${phone}`);
+        closeModal();
+    }
 </script>
+
 </body>
 </html>
